@@ -1,2 +1,2 @@
-# senpo-kaiseki
+# senpo_kaiseki
 script for Peachy Vow
