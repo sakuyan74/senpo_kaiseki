@@ -59,6 +59,8 @@ class discordbot(commands.Bot):
                     await message.channel.send(self.errorcode[result['error_code']]['message'])
                 else:
                     await message.channel.send("勝敗は" + result['win_result'] + "です")
+                    await message.channel.send("味方ユーザは" + result['user_result'] + "です")
+                    await message.channel.send("敵ユーザは" + result['e_user_result'] + "です")
             except Exception as e:
                 print(traceback.format_exc())
                 print(e)

@@ -1,6 +1,6 @@
 # read_image.py
 import os
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageChops, ImageFilter
 import numpy as np
 from senpo_kaiseki.ocr.google_ocr_application_ext import GoogleOCRApplicationExt
 from google_drive_ocr.application import Status
@@ -13,7 +13,8 @@ HEADER_HEIGHT = 30
 
 WIN_TMP_FILE = "/tmp/win.png"
 WIN_TMP_RESULT_FILE = "/tmp/win_result.txt"
-TMP_SECRET = "/tmp/client_secret.json"
+USER_TMP_FILE = "/tep/username.png"
+USER_TMP_RESULT_FILE = "/tep/username_result.txt"
 
 
 class SenpoAnalyzer():
@@ -61,47 +62,93 @@ class SenpoAnalyzer():
             return result
 
         result['win_result'] = win_result
+
+        # 味方ユーザ名抽出
+        try:
+            user_result = self.check_user(img_org, crop_list[1]["data"])
+        except Exception:
+            result["error_code"] = "E999"
+            return result
+
+        result['user_result'] = user_result
+
+        # 敵ユーザ名抽出
+        try:
+            e_user_result = self.check_user(img_org, crop_list[2]["data"])
+        except Exception:
+            result["error_code"] = "E999"
+            return result
+
+        result['e_user_result'] = e_user_result
+
         return result
 
-        # 線画抽出
-        '''
-        img_gray2 = img_gray.filter(ImageFilter.MaxFilter(5))
-        senga_inv = ImageChops.difference(img_gray, img_gray2)
-        senga = ImageOps.invert(senga_inv)
-        '''
-
-    def check_win(self, img, range) -> str:
-        # 勝敗判定
+    def _binarize_image(self, img, range, threshold, to_senga=False) -> Image:
+        # 切り取り
         win_crop_range = range
-        img_win = img.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
+        img_bin = img.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
 
         # グレースケール
-        img_win = img_win.convert("L")
-        img_win = ImageOps.invert(img_win)
+        img_bin = img_bin.convert("L")
+        img_bin = ImageOps.invert(img_bin)
 
         # ２値化
-        img_win = np.array(img_win, 'f')
-        img_win = (img_win > 170) * 255
+        img_bin = np.array(img_bin, 'f')
+        img_bin = (img_bin > threshold) * 255
 
         # PILのイメージに戻す
-        img_win = Image.fromarray(np.uint8(img_win))
-        img_win = img_win.convert("L")
+        img_bin = Image.fromarray(np.uint8(img_bin))
+        img_bin = img_bin.convert("L")
 
+        if to_senga:
+            img_bin2 = img_bin.filter(ImageFilter.MaxFilter(5))
+            senga_inv = ImageChops.difference(img_bin, img_bin2)
+            senga = ImageOps.invert(senga_inv)
+            return senga
+
+        return img_bin
+
+    def _perform_ocr(self, upload_path, resulf_path) -> list(str):
         # 既存ファイル削除
-        if os.path.isfile(WIN_TMP_FILE):
-            os.remove(WIN_TMP_FILE)
-        if os.path.isfile(WIN_TMP_RESULT_FILE):
-            os.remove(WIN_TMP_RESULT_FILE)
+        if os.path.isfile(upload_path):
+            os.remove(upload_path)
+        if os.path.isfile(resulf_path):
+            os.remove(resulf_path)
 
         # GoogleAPI呼び出し
-        img_win.save(WIN_TMP_FILE)
-        # img_win.show()
-        if self.app.perform_ocr(WIN_TMP_FILE, WIN_TMP_RESULT_FILE) == Status.ERROR:
+        if self.app.perform_ocr(upload_path, resulf_path) == Status.ERROR:
             raise Exception("InternalError")
 
         # 出力されたファイルの確認
-        with open(WIN_TMP_RESULT_FILE, "r", encoding="utf-8_sig") as f:
+        with open(resulf_path, "r", encoding="utf-8_sig") as f:
             result = f.readlines()
+
+        return result
+
+    def check_user(self, img, range) -> tuple(str, str):
+        # ユーザ名判定
+        img_user = self._binarize_image(img, range, 115, True)
+        img_user.save()
+
+        try:
+            result = self._perform_ocr(USER_TMP_FILE, USER_TMP_RESULT_FILE)
+        except Exception as e:
+            raise e
+
+        if len(result) >= 3:
+            return result[2]
+        else:
+            return '読み込みに失敗しました'
+
+    def check_win(self, img, range) -> str:
+        # 勝敗判定
+        img_win = self._binarize_image(img, range, 170)
+        img_win.save(WIN_TMP_FILE)
+
+        try:
+            result = self._perform_ocr(WIN_TMP_FILE, WIN_TMP_RESULT_FILE)
+        except Exception as e:
+            raise e
 
         if len(result) == 0:
             return '勝'
