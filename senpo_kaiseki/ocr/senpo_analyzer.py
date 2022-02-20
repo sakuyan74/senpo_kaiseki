@@ -13,6 +13,8 @@ DEFAULT_PC_WIDTH = 1282
 DEFAULT_PC_HEIGHT = 752
 HEADER_HEIGHT = 30
 
+DEFAULT_USER_THRESHOLD = 95
+
 WIN_TMP_FILE = "/tmp/win.png"
 WIN_TMP_RESULT_FILE = "/tmp/win_result.txt"
 USER_TMP_FILE = "/tmp/username.png"
@@ -68,7 +70,12 @@ class SenpoAnalyzer():
 
         # 味方ユーザ名抽出
         try:
-            user_result = self.check_user(img_org, crop_list[1]["data"], 95)
+            for i in range(3):
+                threshold = DEFAULT_USER_THRESHOLD + i * 20
+                user_result = self.check_user(img_org, crop_list[1]["data"], threshold)
+                if user_result is not None:
+                    break
+
         except Exception:
             result["error_code"] = "E999"
             print(traceback.format_exc())
@@ -78,7 +85,11 @@ class SenpoAnalyzer():
 
         # 敵ユーザ名抽出
         try:
-            e_user_result = self.check_user(img_org, crop_list[2]["data"], 95)
+            for i in range(3):
+                threshold = DEFAULT_USER_THRESHOLD + i * 20
+                e_user_result = self.check_user(img_org, crop_list[2]["data"], threshold)
+                if e_user_result is not None:
+                    break
         except Exception:
             result["error_code"] = "E999"
             print(traceback.format_exc())
@@ -144,8 +155,7 @@ class SenpoAnalyzer():
         if len(result) >= 3:
             return result[2]
         else:
-            result = self.check_user(img, range, threshold + 20)
-            return result
+            return None
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
