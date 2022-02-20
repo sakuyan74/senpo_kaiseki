@@ -4,6 +4,7 @@ from PIL import Image, ImageOps, ImageChops, ImageFilter
 import numpy as np
 from senpo_kaiseki.ocr.google_ocr_application_ext import GoogleOCRApplicationExt
 from google_drive_ocr.application import Status
+from typing import List, Tuple
 
 DEFAULT_WIDTH = 1280
 DEFAULT_HEIGHT = 720
@@ -108,7 +109,7 @@ class SenpoAnalyzer():
 
         return img_bin
 
-    def _perform_ocr(self, upload_path, resulf_path) -> list(str):
+    def _perform_ocr(self, upload_path, resulf_path) -> List[str]:
         # 既存ファイル削除
         if os.path.isfile(upload_path):
             os.remove(upload_path)
@@ -125,7 +126,7 @@ class SenpoAnalyzer():
 
         return result
 
-    def check_user(self, img, range) -> tuple(str, str):
+    def check_user(self, img, range) -> Tuple[str]:
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115, True)
         img_user.save()
