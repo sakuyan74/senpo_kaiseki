@@ -1,1 +1,4 @@
 pyocr
+google-drive-ocr
+discord.py
+numpy
