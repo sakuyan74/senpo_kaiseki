@@ -13,7 +13,7 @@ class GoogleOCRApplicationExt(GoogleOCRApplication):
     client_secret: str = attr.ib(default=None)
     upload_folder_id: str = attr.ib(default=None)
     ocr_suffix: str = attr.ib(default='.google.txt')
-    temporary_upload: bool = attr.ib(default=None)
+    temporary_upload: bool = attr.ib(default=True)
     credentials_path: str = attr.ib(default=None, repr=False)
     scopes: str = attr.ib(default=SCOPES)
 
