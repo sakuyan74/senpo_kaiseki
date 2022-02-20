@@ -13,7 +13,7 @@ DEFAULT_PC_WIDTH = 1282
 DEFAULT_PC_HEIGHT = 752
 HEADER_HEIGHT = 30
 
-DEFAULT_USER_THRESHOLD = 95
+DEFAULT_USER_THRESHOLD = 75
 
 WIN_TMP_FILE = "/tmp/win.png"
 WIN_TMP_RESULT_FILE = "/tmp/win_result.txt"
@@ -70,11 +70,15 @@ class SenpoAnalyzer():
 
         # 味方ユーザ名抽出
         try:
-            for i in range(3):
+            user_result = None
+            for i in range(4):
                 threshold = DEFAULT_USER_THRESHOLD + i * 20
                 user_result = self.check_user(img_org, crop_list[1]["data"], threshold)
                 if user_result is not None:
                     break
+            
+            if user_result is None:
+                user_result = '読み取れませんでした'
 
         except Exception:
             result["error_code"] = "E999"
@@ -85,11 +89,16 @@ class SenpoAnalyzer():
 
         # 敵ユーザ名抽出
         try:
+            e_user_result = None
             for i in range(3):
                 threshold = DEFAULT_USER_THRESHOLD + i * 20
                 e_user_result = self.check_user(img_org, crop_list[2]["data"], threshold)
                 if e_user_result is not None:
                     break
+
+            if e_user_result is None:
+                e_user_result = '読み取れませんでした'
+
         except Exception:
             result["error_code"] = "E999"
             print(traceback.format_exc())
