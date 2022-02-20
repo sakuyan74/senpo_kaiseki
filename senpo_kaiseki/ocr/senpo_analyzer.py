@@ -144,7 +144,7 @@ class SenpoAnalyzer():
         if len(result) >= 3:
             return result[2]
         else:
-            result = self.check_user(img, range, threshold + 20, True)
+            result = self.check_user(img, range, threshold + 20)
             return result
 
     def check_win(self, img, range) -> str:
