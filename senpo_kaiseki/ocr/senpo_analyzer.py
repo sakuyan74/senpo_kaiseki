@@ -140,7 +140,17 @@ class SenpoAnalyzer():
         if len(result) >= 3:
             return result[2]
         else:
-            return '読み込みに失敗しました'
+            img_user = self._binarize_image(img, range, 135, True)
+
+            try:
+                result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
+            except Exception as e:
+                raise e
+
+            if len(result) >= 3:
+                return result[2]
+            else:
+                return '読み込みに失敗しました'
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
