@@ -68,7 +68,7 @@ class SenpoAnalyzer():
 
         # 味方ユーザ名抽出
         try:
-            user_result = self.check_user(img_org, crop_list[1]["data"])
+            user_result = self.check_user(img_org, crop_list[1]["data"], 95)
         except Exception:
             result["error_code"] = "E999"
             print(traceback.format_exc())
