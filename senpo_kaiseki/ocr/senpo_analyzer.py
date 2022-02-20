@@ -109,12 +109,14 @@ class SenpoAnalyzer():
 
         return img_bin
 
-    def _perform_ocr(self, upload_path, result_path) -> List[str]:
+    def _perform_ocr(self, img, upload_path, result_path) -> List[str]:
         # 既存ファイル削除
         if os.path.isfile(upload_path):
             os.remove(upload_path)
         if os.path.isfile(result_path):
             os.remove(result_path)
+
+        img.save(upload_path)
 
         # GoogleAPI呼び出し
         if self.app.perform_ocr(upload_path, result_path) == Status.ERROR:
@@ -129,10 +131,9 @@ class SenpoAnalyzer():
     def check_user(self, img, range) -> Tuple[str]:
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115, True)
-        img_user.save(USER_TMP_FILE)
 
         try:
-            result = self._perform_ocr(USER_TMP_FILE, USER_TMP_RESULT_FILE)
+            result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
         except Exception as e:
             raise e
 
@@ -144,10 +145,9 @@ class SenpoAnalyzer():
     def check_win(self, img, range) -> str:
         # 勝敗判定
         img_win = self._binarize_image(img, range, 170)
-        img_win.save(WIN_TMP_FILE)
 
         try:
-            result = self._perform_ocr(WIN_TMP_FILE, WIN_TMP_RESULT_FILE)
+            result = self._perform_ocr(img_win, WIN_TMP_FILE, WIN_TMP_RESULT_FILE)
         except Exception as e:
             raise e
 
