@@ -75,7 +75,7 @@ class SenpoAnalyzer():
 
         # 敵ユーザ名抽出
         try:
-            e_user_result = self.check_user(img_org, crop_list[2]["data"])
+            e_user_result = self.check_user(img_org, crop_list[2]["data"], 95)
         except Exception:
             result["error_code"] = "E999"
             return result
@@ -128,9 +128,9 @@ class SenpoAnalyzer():
 
         return result
 
-    def check_user(self, img, range) -> Tuple[str]:
+    def check_user(self, img, range, threshold) -> str:
         # ユーザ名判定
-        img_user = self._binarize_image(img, range, 115, True)
+        img_user = self._binarize_image(img, range, threshold, True)
 
         try:
             result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
@@ -140,17 +140,8 @@ class SenpoAnalyzer():
         if len(result) >= 3:
             return result[2]
         else:
-            img_user = self._binarize_image(img, range, 135, True)
-
-            try:
-                result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
-            except Exception as e:
-                raise e
-
-            if len(result) >= 3:
-                return result[2]
-            else:
-                return '読み込みに失敗しました'
+            result = self.check_user(img_user, range, threshold + 20, True)
+            return result
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
