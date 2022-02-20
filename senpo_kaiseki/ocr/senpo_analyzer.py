@@ -4,7 +4,8 @@ from PIL import Image, ImageOps, ImageChops, ImageFilter
 import numpy as np
 from senpo_kaiseki.ocr.google_ocr_application_ext import GoogleOCRApplicationExt
 from google_drive_ocr.application import Status
-from typing import List, Tuple
+from typing import List
+import traceback
 
 DEFAULT_WIDTH = 1280
 DEFAULT_HEIGHT = 720
@@ -60,6 +61,7 @@ class SenpoAnalyzer():
             win_result = self.check_win(img_org, crop_list[0]["data"])
         except Exception:
             result["error_code"] = "E999"
+            print(traceback.format_exc())
             return result
 
         result['win_result'] = win_result
@@ -69,6 +71,7 @@ class SenpoAnalyzer():
             user_result = self.check_user(img_org, crop_list[1]["data"])
         except Exception:
             result["error_code"] = "E999"
+            print(traceback.format_exc())
             return result
 
         result['user_result'] = user_result
@@ -78,6 +81,7 @@ class SenpoAnalyzer():
             e_user_result = self.check_user(img_org, crop_list[2]["data"], 95)
         except Exception:
             result["error_code"] = "E999"
+            print(traceback.format_exc())
             return result
 
         result['e_user_result'] = e_user_result
@@ -140,7 +144,7 @@ class SenpoAnalyzer():
         if len(result) >= 3:
             return result[2]
         else:
-            result = self.check_user(img_user, range, threshold + 20, True)
+            result = self.check_user(img, range, threshold + 20, True)
             return result
 
     def check_win(self, img, range) -> str:
