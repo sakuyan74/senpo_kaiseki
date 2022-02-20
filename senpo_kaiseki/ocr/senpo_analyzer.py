@@ -14,8 +14,8 @@ HEADER_HEIGHT = 30
 
 WIN_TMP_FILE = "/tmp/win.png"
 WIN_TMP_RESULT_FILE = "/tmp/win_result.txt"
-USER_TMP_FILE = "/tep/username.png"
-USER_TMP_RESULT_FILE = "/tep/username_result.txt"
+USER_TMP_FILE = "/tmp/username.png"
+USER_TMP_RESULT_FILE = "/tmp/username_result.txt"
 
 
 class SenpoAnalyzer():
@@ -109,19 +109,19 @@ class SenpoAnalyzer():
 
         return img_bin
 
-    def _perform_ocr(self, upload_path, resulf_path) -> List[str]:
+    def _perform_ocr(self, upload_path, result_path) -> List[str]:
         # 既存ファイル削除
         if os.path.isfile(upload_path):
             os.remove(upload_path)
-        if os.path.isfile(resulf_path):
-            os.remove(resulf_path)
+        if os.path.isfile(result_path):
+            os.remove(result_path)
 
         # GoogleAPI呼び出し
-        if self.app.perform_ocr(upload_path, resulf_path) == Status.ERROR:
+        if self.app.perform_ocr(upload_path, result_path) == Status.ERROR:
             raise Exception("InternalError")
 
         # 出力されたファイルの確認
-        with open(resulf_path, "r", encoding="utf-8_sig") as f:
+        with open(result_path, "r", encoding="utf-8_sig") as f:
             result = f.readlines()
 
         return result
@@ -129,7 +129,7 @@ class SenpoAnalyzer():
     def check_user(self, img, range) -> Tuple[str]:
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115, True)
-        img_user.save()
+        img_user.save(USER_TMP_FILE)
 
         try:
             result = self._perform_ocr(USER_TMP_FILE, USER_TMP_RESULT_FILE)
