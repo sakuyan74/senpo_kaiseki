@@ -154,7 +154,7 @@ class SenpoAnalyzer():
 
     def check_user(self, img, range, threshold) -> str:
         # ユーザ名判定
-        img_user = self._binarize_image(img, range, threshold, True)
+        img_user = self._binarize_image(img, range, threshold, False)
 
         try:
             result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
