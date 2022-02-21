@@ -24,7 +24,7 @@ USER_TMP_RESULT_FILE = "/tmp/username_result.txt"
 class SenpoAnalyzer():
 
     def __init__(self):
-        self.app = GoogleOCRApplicationExt()
+        self.app = GoogleOCRApplicationExt(temporary_upload=False)
 
     def analyze(self, fp, settings):
 
@@ -76,7 +76,7 @@ class SenpoAnalyzer():
                 user_result = self.check_user(img_org, crop_list[1]["data"], threshold)
                 if user_result is not None:
                     break
-            
+
             if user_result is None:
                 user_result = '読み取れませんでした'
 
