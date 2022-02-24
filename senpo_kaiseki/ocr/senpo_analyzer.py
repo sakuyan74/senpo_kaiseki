@@ -422,15 +422,15 @@ class SenpoAnalyzer():
         return result
 
     def _binarize_image(self, img, range, threshold, win_lose=False) -> Image:
-        # 拡大して切り取り
-        width = img.width
-        height = img.height
+
+        # 切り取って拡大
+        win_crop_range = range
+        img_bin = img.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
 
         if not win_lose:
-            img_bin = img.resize((width * 8, height * 8))
-
-        win_crop_range = range
-        img_bin = img_bin.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
+            width = img_bin.width
+            height = img_bin.height
+            img_bin = img_bin.resize((width * 8, height * 8))
 
         # グレースケール
         img_bin = img_bin.convert("L")
