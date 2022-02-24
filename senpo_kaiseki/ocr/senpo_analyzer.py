@@ -421,15 +421,16 @@ class SenpoAnalyzer():
 
         return result
 
-    def _binarize_image(self, img, range, threshold) -> Image:
+    def _binarize_image(self, img, range, threshold, win_lose=False) -> Image:
         # 拡大して切り取り
         width = img.width
         height = img.height
 
-        img_bin = img.resize((width * 8, height * 8))
+        if not win_lose:
+            img_bin = img.resize((width * 8, height * 8))
 
         win_crop_range = range
-        img_bin = img.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
+        img_bin = img_bin.crop((win_crop_range[0], win_crop_range[1], win_crop_range[2], win_crop_range[3]))
 
         # グレースケール
         img_bin = img_bin.convert("L")
@@ -443,10 +444,11 @@ class SenpoAnalyzer():
         img_bin = Image.fromarray(np.uint8(img_bin))
         img_bin = img_bin.convert("L")
 
-        img_bin = img_bin.filter(ImageFilter.MaxFilter(3))
-        img_bin = img_bin.filter(ImageFilter.MaxFilter(3))
-        img_bin = img_bin.filter(ImageFilter.MinFilter(3))
-        img_bin = img_bin.filter(ImageFilter.MinFilter(3))
+        if not win_lose:
+            img_bin = img_bin.filter(ImageFilter.MaxFilter(3))
+            img_bin = img_bin.filter(ImageFilter.MaxFilter(3))
+            img_bin = img_bin.filter(ImageFilter.MinFilter(3))
+            img_bin = img_bin.filter(ImageFilter.MinFilter(3))
 
         return img_bin
 
@@ -485,7 +487,7 @@ class SenpoAnalyzer():
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
-        img_win = self._binarize_image(img, range, 170)
+        img_win = self._binarize_image(img, range, 170, True)
 
         try:
             result = self._perform_ocr(img_win, WIN_TMP_FILE, WIN_TMP_RESULT_FILE)
