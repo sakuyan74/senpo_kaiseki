@@ -19,14 +19,16 @@ DEFAULT_USER_THRESHOLD = 115
 
 WIN_TMP_FILE = "/tmp/win.png"
 WIN_TMP_RESULT_FILE = "/tmp/win_result.txt"
-USER_TMP_FILE = "/tmp/username.png"
-USER_TMP_RESULT_FILE = "/tmp/username_result.txt"
+USER_TMP_FILE_PREFIX = "/tmp/username"
+USER_TMP_FILE_SUFFIX = ".png"
+USER_TMP_RESULT_FILE_PREFIX = "/tmp/username_result"
+USER_TMP_RESULT_FILE_SUFFIX = ".txt"
 
 
 class SenpoAnalyzer():
 
     def __init__(self):
-        self.app = GoogleOCRApplicationExt(temporary_upload=False)
+        self.app = GoogleOCRApplicationExt(temporary_upload=True)
 
     def analyze(self, fp, settings):
 
@@ -147,8 +149,11 @@ class SenpoAnalyzer():
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115)
 
+        file_path = USER_TMP_FILE_PREFIX + str(code) + USER_TMP_FILE_SUFFIX
+        result_path = USER_TMP_RESULT_FILE_PREFIX + str(code) + USER_TMP_RESULT_FILE_SUFFIX
+
         try:
-            result = self._perform_ocr(img_user, USER_TMP_FILE, USER_TMP_RESULT_FILE)
+            result = self._perform_ocr(img_user, file_path, result_path)
         except Exception as e:
             raise e
 
