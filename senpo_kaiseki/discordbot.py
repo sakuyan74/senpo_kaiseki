@@ -15,8 +15,8 @@ INITIAL_EXTENSIONS = [
 
 class discordbot(commands.Bot):
 
-    def __init__(self, settings, errorcode, **options):
-        super().__init__(**options)
+    def __init__(self, settings, errorcode, command_prefix, **options):
+        super().__init__(command_prefix, **options)
         self.analyzer = SenpoAnalyzer()
         self.settings = settings
         self.errorcode = errorcode

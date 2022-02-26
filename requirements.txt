@@ -1,5 +1,5 @@
 pyocr
 google-drive-ocr
-discord.py
+discord.py[voice]
 numpy
 pymongo[srv]
