@@ -29,6 +29,12 @@ class ResultCode(Enum):
     E_SENPO_1_1 = 25
     E_SENPO_1_2 = 26
     E_SENPO_1_3 = 27
+    BUSYO_1 = 28
+    BUSYO_2 = 29
+    BUSYO_3 = 30
+    E_BUSYO_1 = 31
+    E_BUSYO_2 = 32
+    E_BUSYO_3 = 33
 
 
 class SuccessCode(Enum):
