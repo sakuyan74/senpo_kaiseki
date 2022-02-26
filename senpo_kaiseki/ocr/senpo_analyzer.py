@@ -75,12 +75,12 @@ class SenpoAnalyzer():
         future_list = []
         with ThreadPoolExecutor(max_workers=4) as executor:
 
-            future_list = [executor.submit(self.check_user, img_org, crop_list[item.value]["data"], item.value) for item in ResultCode]
+            future_list = [executor.submit(self.check_user, img_org, crop_list[item.value]["data"], item.name) for item in ResultCode]
 
             for future in as_completed(future_list):
                 try:
                     f_result = future.result()
-                    result[str(f_result[1])] = f_result[0]
+                    result[f_result[1]] = f_result[0]
                 except Exception:
                     print("ERROR:")
                     print(traceback.format_exc())
@@ -146,12 +146,12 @@ class SenpoAnalyzer():
 
         return result
 
-    def check_user(self, img, range, code) -> Tuple[str, int]:
+    def check_user(self, img, range, name) -> Tuple[str, str]:
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115)
 
-        file_path = USER_TMP_FILE_PREFIX + str(code) + USER_TMP_FILE_SUFFIX
-        result_path = USER_TMP_RESULT_FILE_PREFIX + str(code) + USER_TMP_RESULT_FILE_SUFFIX
+        file_path = USER_TMP_FILE_PREFIX + name + USER_TMP_FILE_SUFFIX
+        result_path = USER_TMP_RESULT_FILE_PREFIX + name + USER_TMP_RESULT_FILE_SUFFIX
 
         try:
             result = self._perform_ocr(img_user, file_path, result_path)
@@ -159,9 +159,9 @@ class SenpoAnalyzer():
             raise e
 
         if len(result) >= 3:
-            return result[2], code
+            return result[2], name
         else:
-            return None, code
+            return None, name
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
