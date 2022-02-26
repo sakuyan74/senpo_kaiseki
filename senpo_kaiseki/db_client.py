@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import os
 from senpo_kaiseki.code import ResultCode, SuccessCode
 
-CONNECT_STRING = "mongodb+srv://:" + os.environ("MONGO_USER") + ":" + os.environ("MONGO_PASS") + "@senpo-kaiseki.hq8wf.mongodb.net/senpo_kaiseki?"
+CONNECT_STRING = "mongodb+srv://:" + os.environ["MONGO_USER"] + ":" + os.environ["MONGO_PASS"] + "@senpo-kaiseki.hq8wf.mongodb.net/senpo_kaiseki?"
 QUERY_STRING = "authSource=admin&retryWrites=true&w=majority&replicaSet=atlas-10pfbu-shard-0&readPreference=primary&appName=SenpoKaiseki"
 
 
