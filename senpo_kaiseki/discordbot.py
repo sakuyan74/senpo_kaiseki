@@ -22,6 +22,10 @@ class discordbot(commands.Bot):
         # 起動したらターミナルにログイン通知が表示される
         print('ログインしました')
 
+    @commands.Bot.command()
+    async def neko(self, ctx):
+        await ctx.send('にゃーん')
+
     # メッセージ受信時に動作する処理
     async def on_message(self, message):
         # 戦法解析チャンネル以外はスルー
@@ -30,9 +34,6 @@ class discordbot(commands.Bot):
         # メッセージ送信者がBotだった場合は無視する
         if message.author.bot:
             return
-        # 「/neko」と発言したら「にゃーん」が返る処理
-        if message.content == '/neko':
-            await message.channel.send('にゃーん')
 
         if message.attachments:
             # 添付ファイルが複数の時 TODO:あとで複数ファイル対応にする

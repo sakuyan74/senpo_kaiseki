@@ -36,7 +36,8 @@ class MongoDatabaseClient():
                 "senpo3_2": str(data[ResultCode.SENPO_3_2.name]),
                 "senpo3_3": str(data[ResultCode.SENPO_3_3.name])
             }
-            _ = self.collection.insert_one(doc)
+            doc_id = self.collection.insert_one(doc).inserted_id
+            print(doc_id)
             res.append(SuccessCode.INSERT)
         else:
             res.append(SuccessCode.FAILED)
@@ -59,7 +60,10 @@ class MongoDatabaseClient():
                 "senpo3_2": str(data[ResultCode.E_SENPO_3_2.name]),
                 "senpo3_3": str(data[ResultCode.E_SENPO_3_3.name])
             }
-            _ = self.collection.insert_one(doc)
+            doc_id = self.collection.insert_one(doc).inserted_id
+            print(doc_id)
             res.append(SuccessCode.INSERT)
         else:
             res.append(SuccessCode.FAILED)
+        
+        return res
