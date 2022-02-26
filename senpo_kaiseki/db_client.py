@@ -23,18 +23,18 @@ class MongoDatabaseClient():
                 "name1": "dummy",
                 "name2": "dummy",
                 "name3": "dummy",
-                "level1": str(data[ResultCode.LEVEL_1]),
-                "level2": str(data[ResultCode.LEVEL_2]),
-                "level3": str(data[ResultCode.LEVEL_3]),
-                "senpo1_1": str(data[ResultCode.SENPO_1_1]),
-                "senpo1_2": str(data[ResultCode.SENPO_1_2]),
-                "senpo1_3": str(data[ResultCode.SENPO_1_3]),
-                "senpo2_1": str(data[ResultCode.SENPO_2_1]),
-                "senpo2_2": str(data[ResultCode.SENPO_2_2]),
-                "senpo2_3": str(data[ResultCode.SENPO_2_3]),
-                "senpo3_1": str(data[ResultCode.SENPO_3_1]),
-                "senpo3_2": str(data[ResultCode.SENPO_3_2]),
-                "senpo3_3": str(data[ResultCode.SENPO_3_3])
+                "level1": str(data[ResultCode.LEVEL_1.name]),
+                "level2": str(data[ResultCode.LEVEL_2.name]),
+                "level3": str(data[ResultCode.LEVEL_3.name]),
+                "senpo1_1": str(data[ResultCode.SENPO_1_1.name]),
+                "senpo1_2": str(data[ResultCode.SENPO_1_2.name]),
+                "senpo1_3": str(data[ResultCode.SENPO_1_3.name]),
+                "senpo2_1": str(data[ResultCode.SENPO_2_1.name]),
+                "senpo2_2": str(data[ResultCode.SENPO_2_2.name]),
+                "senpo2_3": str(data[ResultCode.SENPO_2_3.name]),
+                "senpo3_1": str(data[ResultCode.SENPO_3_1.name]),
+                "senpo3_2": str(data[ResultCode.SENPO_3_2.name]),
+                "senpo3_3": str(data[ResultCode.SENPO_3_3.name])
             }
             _ = self.collection.insert_one(doc)
             res.append(SuccessCode.INSERT)
@@ -46,18 +46,18 @@ class MongoDatabaseClient():
                 "name1": "dummy",
                 "name2": "dummy",
                 "name3": "dummy",
-                "level1": str(data[ResultCode.E_LEVEL_1]),
-                "level2": str(data[ResultCode.E_LEVEL_2]),
-                "level3": str(data[ResultCode.E_LEVEL_3]),
-                "senpo1_1": str(data[ResultCode.E_SENPO_1_1]),
-                "senpo1_2": str(data[ResultCode.E_SENPO_1_2]),
-                "senpo1_3": str(data[ResultCode.E_SENPO_1_3]),
-                "senpo2_1": str(data[ResultCode.E_SENPO_2_1]),
-                "senpo2_2": str(data[ResultCode.E_SENPO_2_2]),
-                "senpo2_3": str(data[ResultCode.E_SENPO_2_3]),
-                "senpo3_1": str(data[ResultCode.E_SENPO_3_1]),
-                "senpo3_2": str(data[ResultCode.E_SENPO_3_2]),
-                "senpo3_3": str(data[ResultCode.E_SENPO_3_3])
+                "level1": str(data[ResultCode.E_LEVEL_1.name]),
+                "level2": str(data[ResultCode.E_LEVEL_2.name]),
+                "level3": str(data[ResultCode.E_LEVEL_3.name]),
+                "senpo1_1": str(data[ResultCode.E_SENPO_1_1.name]),
+                "senpo1_2": str(data[ResultCode.E_SENPO_1_2.name]),
+                "senpo1_3": str(data[ResultCode.E_SENPO_1_3.name]),
+                "senpo2_1": str(data[ResultCode.E_SENPO_2_1.name]),
+                "senpo2_2": str(data[ResultCode.E_SENPO_2_2.name]),
+                "senpo2_3": str(data[ResultCode.E_SENPO_2_3.name]),
+                "senpo3_1": str(data[ResultCode.E_SENPO_3_1.name]),
+                "senpo3_2": str(data[ResultCode.E_SENPO_3_2.name]),
+                "senpo3_3": str(data[ResultCode.E_SENPO_3_3.name])
             }
             _ = self.collection.insert_one(doc)
             res.append(SuccessCode.INSERT)

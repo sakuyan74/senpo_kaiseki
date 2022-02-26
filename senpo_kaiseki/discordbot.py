@@ -105,5 +105,6 @@ class discordbot(commands.Bot):
                                                    "\n敵副将2戦法3：：" + result[ResultCode.E_SENPO_3_3.name])
 
             except Exception as e:
+                await message.channel.send('サーバ内部エラー：しばらくおまちください。')
                 print(traceback.format_exc())
                 print(e)
