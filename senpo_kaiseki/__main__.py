@@ -18,4 +18,5 @@ if __name__ == '__main__':
     cog = bot.get_cog('ReadCog')
     commands = cog.get_commands()
     print([c.name for c in commands])
+    print("PREFIX:" + str(bot.command_prefix))
     bot.run(TOKEN)
