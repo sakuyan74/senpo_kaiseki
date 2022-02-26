@@ -80,7 +80,10 @@ class SenpoAnalyzer():
             for future in as_completed(future_list):
                 try:
                     f_result = future.result()
-                    result[f_result[1]] = f_result[0]
+                    if f_result[0] is None:
+                        result[f_result[1]] = "※読取失敗※"
+                    else:
+                        result[f_result[1]] = f_result[0]
                 except Exception:
                     print("ERROR:")
                     print(traceback.format_exc())
