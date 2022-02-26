@@ -13,4 +13,5 @@ class ReadCog(commands.Cog):
 
 
 def setup(bot):
+    print("setup_run")
     bot.add_cog(ReadCog(bot))
