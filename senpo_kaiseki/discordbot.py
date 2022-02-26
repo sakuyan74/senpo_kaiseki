@@ -115,3 +115,5 @@ class DiscordBot(commands.Bot):
                 await message.channel.send('サーバ内部エラー：しばらくおまちください。')
                 print(traceback.format_exc())
                 print(e)
+
+        await self.process_commands(message)
