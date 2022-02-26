@@ -14,5 +14,5 @@ if __name__ == '__main__':
     # 設定ファイル読み込み
     with open("./errorcode.json", "r", encoding="utf-8_sig") as f2:
         errorcode = json.load(f2)
-    bot = discordbot.discordbot(settings=settings, errorcode=errorcode, command_prefix='!')
+    bot = discordbot.DiscordBot(settings=settings, errorcode=errorcode, command_prefix='!')
     bot.run(TOKEN)
