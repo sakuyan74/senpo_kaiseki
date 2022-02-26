@@ -28,7 +28,7 @@ USER_TMP_RESULT_FILE_SUFFIX = ".txt"
 class SenpoAnalyzer():
 
     def __init__(self):
-        self.app = GoogleOCRApplicationExt(temporary_upload=True)
+        pass
 
     def analyze(self, fp, settings):
 
@@ -127,6 +127,7 @@ class SenpoAnalyzer():
         return img_bin
 
     def _perform_ocr(self, img, upload_path, result_path) -> List[str]:
+        app = GoogleOCRApplicationExt(temporary_upload=True)
         # 既存ファイル削除
         if os.path.isfile(upload_path):
             os.remove(upload_path)
@@ -136,7 +137,7 @@ class SenpoAnalyzer():
         img.save(upload_path)
 
         # GoogleAPI呼び出し
-        if self.app.perform_ocr(upload_path, result_path) == Status.ERROR:
+        if app.perform_ocr(upload_path, result_path) == Status.ERROR:
             raise Exception("InternalError")
 
         # 出力されたファイルの確認
