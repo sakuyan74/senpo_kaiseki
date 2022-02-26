@@ -5,6 +5,7 @@ import os
 import io
 import traceback
 import urllib.request
+from senpo_kaiseki.code import ResultCode
 
 
 class discordbot(commands.Bot):
@@ -59,33 +60,33 @@ class discordbot(commands.Bot):
                     await message.channel.send(self.errorcode[result['error_code']]['message'])
                 else:
                     await message.channel.send("勝敗：" + result['win_result'] +
-                                               "\n味方ユーザ：" + result['user_result'] +
-                                               "\n敵ユーザ：" + result['e_user_result'] +
-                                               "\n敵同盟：" + result['e_alliance'])
-                    await message.channel.send("味方主将Lv：" + result['level1'] +
-                                               "\n味方副将1Lv：" + result['level2'] +
-                                               "\n味方副将2Lv：" + result['level3'])
-                    await message.channel.send("敵主将Lv：" + result['e_level1'] +
-                                               "\n敵副将1Lv：" + result['e_level2'] +
-                                               "\n敵副将2Lv：" + result['e_level3'])
-                    await message.channel.send("味方主将戦法1：" + result['senpo_1_1'] +
-                                               "\n味方主将戦法2：：" + result['senpo_1_2'] +
-                                               "\n味方主将戦法3：：" + result['senpo_1_3'])
-                    await message.channel.send("味方副将1戦法1：" + result['senpo_2_1'] +
-                                               "\n味方副将1戦法2：：" + result['senpo_2_2'] +
-                                               "\n味方副将1戦法3：：" + result['senpo_2_3'])
-                    await message.channel.send("味方副将2戦法1：" + result['senpo_3_1'] +
-                                               "\n味方副将2戦法2：：" + result['senpo_3_2'] +
-                                               "\n味方副将2戦法3：：" + result['senpo_3_3'])
-                    await message.channel.send("敵主将戦法1：" + result['e_senpo_1_1'] +
-                                               "\n敵主将戦法2：：" + result['e_senpo_1_2'] +
-                                               "\n敵主将戦法3：：" + result['e_senpo_1_3'])
-                    await message.channel.send("敵副将1戦法1：" + result['e_senpo_2_1'] +
-                                               "\n敵副将1戦法2：：" + result['e_senpo_2_2'] +
-                                               "\n敵副将1戦法3：：" + result['e_senpo_2_3'])
-                    await message.channel.send("敵副将2戦法1：" + result['e_senpo_3_1'] +
-                                               "\n敵副将2戦法2：：" + result['e_senpo_3_2'] +
-                                               "\n敵副将2戦法3：：" + result['e_senpo_3_3'])
+                                               "\n味方ユーザ：" + result[str(ResultCode.USER_NAME)] +
+                                               "\n敵ユーザ：" + result[str(ResultCode.E_USER_NAME)] +
+                                               "\n敵同盟：" + result[str(ResultCode.E_ALLIANCE_NAME)])
+                    await message.channel.send("味方主将Lv：" + result[str(ResultCode.LEVEL_1)] +
+                                               "\n味方副将1Lv：" + result[str(ResultCode.LEVEL_2)] +
+                                               "\n味方副将2Lv：" + result[str(ResultCode.LEVEL_3)])
+                    await message.channel.send("敵主将Lv：" + result[str(ResultCode.E_LEVEL_1)] +
+                                               "\n敵副将1Lv：" + result[str(ResultCode.E_LEVEL_2)] +
+                                               "\n敵副将2Lv：" + result[str(ResultCode.E_LEVEL_3)])
+                    await message.channel.send("味方主将戦法1：" + result[str(ResultCode.SENPO_1_1)] +
+                                               "\n味方主将戦法2：：" + result[str(ResultCode.SENPO_1_2)] +
+                                               "\n味方主将戦法3：：" + result[str(ResultCode.SENPO_1_3)])
+                    await message.channel.send("味方副将1戦法1：" + result[str(ResultCode.SENPO_2_1)] +
+                                               "\n味方副将1戦法2：：" + result[str(ResultCode.SENPO_2_2)] +
+                                               "\n味方副将1戦法3：：" + result[str(ResultCode.SENPO_2_3)])
+                    await message.channel.send("味方副将2戦法1：" + result[str(ResultCode.SENPO_3_1)] +
+                                               "\n味方副将2戦法2：：" + result[str(ResultCode.SENPO_3_2)] +
+                                               "\n味方副将2戦法3：：" + result[str(ResultCode.SENPO_3_3)])
+                    await message.channel.send("敵主将戦法1：" + result[str(ResultCode.E_SENPO_1_1)] +
+                                               "\n敵主将戦法2：：" + result[str(ResultCode.E_SENPO_1_2)] +
+                                               "\n敵主将戦法3：：" + result[str(ResultCode.E_SENPO_1_3)])
+                    await message.channel.send("敵副将1戦法1：" + result[str(ResultCode.E_SENPO_2_1)] +
+                                               "\n敵副将1戦法2：：" + result[str(ResultCode.E_SENPO_2_2)] +
+                                               "\n敵副将1戦法3：：" + result[str(ResultCode.E_SENPO_2_3)])
+                    await message.channel.send("敵副将2戦法1：" + result[str(ResultCode.E_SENPO_3_1)] +
+                                               "\n敵副将2戦法2：：" + result[str(ResultCode.E_SENPO_3_2)] +
+                                               "\n敵副将2戦法3：：" + result[str(ResultCode.E_SENPO_3_3)])
 
             except Exception as e:
                 print(traceback.format_exc())

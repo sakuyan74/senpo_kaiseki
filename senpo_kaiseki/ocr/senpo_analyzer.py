@@ -4,8 +4,10 @@ from PIL import Image, ImageOps, ImageFilter
 import numpy as np
 from senpo_kaiseki.ocr.google_ocr_application_ext import GoogleOCRApplicationExt
 from google_drive_ocr.application import Status
-from typing import List
+from typing import List, Tuple
 import traceback
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from senpo_kaiseki.code import ResultCode
 
 DEFAULT_WIDTH = 1280
 DEFAULT_HEIGHT = 720
@@ -68,356 +70,26 @@ class SenpoAnalyzer():
 
         result['win_result'] = win_result
 
-        # 味方ユーザ名抽出
-        try:
-            user_result = self.check_user(img_org, crop_list[1]["data"])
-            if user_result is None:
-                user_result = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['user_result'] = user_result
-
-        # 敵ユーザ名抽出
-        try:
-            e_user_result = self.check_user(img_org, crop_list[2]["data"])
-            if e_user_result is None:
-                e_user_result = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_user_result'] = e_user_result
-
-        # 敵同盟名抽出
-        try:
-            e_alliance = self.check_user(img_org, crop_list[3]["data"])
-            if e_alliance is None:
-                e_alliance = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_alliance'] = e_alliance
-
-        # 味方レベル１抽出
-        try:
-            level1 = self.check_user(img_org, crop_list[4]["data"])
-            if level1 is None:
-                level1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['level1'] = level1
-
-        # 味方レベル２抽出
-        try:
-            level2 = self.check_user(img_org, crop_list[5]["data"])
-            if level2 is None:
-                level2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['level2'] = level2
-
-        # 味方レベル３抽出
-        try:
-            level3 = self.check_user(img_org, crop_list[6]["data"])
-            if level3 is None:
-                level3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['level3'] = level3
-
-        # 敵レベル３抽出
-        try:
-            e_level3 = self.check_user(img_org, crop_list[7]["data"])
-            if e_level3 is None:
-                e_level3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_level3'] = e_level3
-
-        # 敵レベル２抽出
-        try:
-            e_level2 = self.check_user(img_org, crop_list[8]["data"])
-            if e_level2 is None:
-                e_level2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_level2'] = e_level2
-
-        # 敵レベル１抽出
-        try:
-            e_level1 = self.check_user(img_org, crop_list[9]["data"])
-            if e_level1 is None:
-                e_level1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_level1'] = e_level1
-
-        # 味方主将戦法1抽出
-        try:
-            senpo_1_1 = self.check_user(img_org, crop_list[10]["data"])
-            if senpo_1_1 is None:
-                senpo_1_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_1_1'] = senpo_1_1
-
-        # 味方主将戦法２抽出
-        try:
-            senpo_1_2 = self.check_user(img_org, crop_list[11]["data"])
-            if senpo_1_2 is None:
-                senpo_1_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_1_2'] = senpo_1_2
-
-        # 味方主将戦法３抽出
-        try:
-            senpo_1_3 = self.check_user(img_org, crop_list[12]["data"])
-            if senpo_1_3 is None:
-                senpo_1_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_1_3'] = senpo_1_3
-
-        # 味方副将１戦法1抽出
-        try:
-            senpo_2_1 = self.check_user(img_org, crop_list[13]["data"])
-            if senpo_2_1 is None:
-                senpo_2_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_2_1'] = senpo_2_1
-
-        # 味方副将１戦法２抽出
-        try:
-            senpo_2_2 = self.check_user(img_org, crop_list[14]["data"])
-            if senpo_2_2 is None:
-                senpo_2_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_2_2'] = senpo_2_2
-
-        # 味方副将１戦法３抽出
-        try:
-            senpo_2_3 = self.check_user(img_org, crop_list[15]["data"])
-            if senpo_2_3 is None:
-                senpo_2_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_2_3'] = senpo_2_3
-
-        # 味方副将２戦法1抽出
-        try:
-            senpo_3_1 = self.check_user(img_org, crop_list[16]["data"])
-            if senpo_3_1 is None:
-                senpo_3_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_3_1'] = senpo_3_1
-
-        # 味方副将２戦法２抽出
-        try:
-            senpo_3_2 = self.check_user(img_org, crop_list[17]["data"])
-            if senpo_3_2 is None:
-                senpo_3_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_3_2'] = senpo_3_2
-
-        # 味方副将２戦法３抽出
-        try:
-            senpo_3_3 = self.check_user(img_org, crop_list[18]["data"])
-            if senpo_3_3 is None:
-                senpo_3_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['senpo_3_3'] = senpo_3_3
-
-        # 敵副将２戦法1抽出
-        try:
-            e_senpo_3_1 = self.check_user(img_org, crop_list[19]["data"])
-            if e_senpo_3_1 is None:
-                e_senpo_3_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_3_1'] = e_senpo_3_1
-
-        # 敵副将２戦法２抽出
-        try:
-            e_senpo_3_2 = self.check_user(img_org, crop_list[20]["data"])
-            if e_senpo_3_2 is None:
-                e_senpo_3_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_3_2'] = e_senpo_3_2
-
-        # 敵副将２戦法３抽出
-        try:
-            e_senpo_3_3 = self.check_user(img_org, crop_list[21]["data"])
-            if e_senpo_3_3 is None:
-                e_senpo_3_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_3_3'] = e_senpo_3_3
-
-        # 敵副将１戦法1抽出
-        try:
-            e_senpo_2_1 = self.check_user(img_org, crop_list[22]["data"])
-            if e_senpo_2_1 is None:
-                e_senpo_2_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_2_1'] = e_senpo_2_1
-
-        # 敵副将１戦法２抽出
-        try:
-            e_senpo_2_2 = self.check_user(img_org, crop_list[23]["data"])
-            if e_senpo_2_2 is None:
-                e_senpo_2_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_2_2'] = e_senpo_2_2
-
-        # 敵副将１戦法３抽出
-        try:
-            e_senpo_2_3 = self.check_user(img_org, crop_list[24]["data"])
-            if e_senpo_2_3 is None:
-                e_senpo_2_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_2_3'] = e_senpo_2_3
-
-        # 敵主将戦法1抽出
-        try:
-            e_senpo_1_1 = self.check_user(img_org, crop_list[25]["data"])
-            if e_senpo_1_1 is None:
-                e_senpo_1_1 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_1_1'] = e_senpo_1_1
-
-        # 敵主将戦法２抽出
-        try:
-            e_senpo_1_2 = self.check_user(img_org, crop_list[26]["data"])
-            if e_senpo_1_2 is None:
-                e_senpo_1_2 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_1_2'] = e_senpo_1_2
-
-        # 敵主将戦法３抽出
-        try:
-            e_senpo_1_3 = self.check_user(img_org, crop_list[27]["data"])
-            if e_senpo_1_3 is None:
-                e_senpo_1_3 = '読み取れませんでした'
-
-        except Exception:
-            result["error_code"] = "E999"
-            print(traceback.format_exc())
-            return result
-
-        result['e_senpo_1_3'] = e_senpo_1_3
+        future_list = []
+        with ThreadPoolExecutor(max_workers=4) as executor:
+
+            future_list = [executor.submit(self.check_user, img_org, crop_list[item.value]["data"], item.value) for item in ResultCode]
+
+            for future in as_completed(future_list):
+                try:
+                    f_result = future.result()
+                    result[str(f_result[1])] = f_result[0]
+                except Exception:
+                    print("ERROR:")
+                    print(traceback.format_exc())
+                    result["error_code"] = "E999"
+                    for f in future_list:
+                        try:
+                            if not f.running():
+                                f.cancel()
+                        except Exception:
+                            continue
+                    break
 
         return result
 
@@ -471,7 +143,7 @@ class SenpoAnalyzer():
 
         return result
 
-    def check_user(self, img, range) -> str:
+    def check_user(self, img, range, code) -> Tuple[str, int]:
         # ユーザ名判定
         img_user = self._binarize_image(img, range, 115)
 
@@ -481,9 +153,9 @@ class SenpoAnalyzer():
             raise e
 
         if len(result) >= 3:
-            return result[2]
+            return result[2], code
         else:
-            return None
+            return None, code
 
     def check_win(self, img, range) -> str:
         # 勝敗判定
