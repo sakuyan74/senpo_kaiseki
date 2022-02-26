@@ -1,4 +1,3 @@
-# インストールした discord.py を読み込む
 from discord.ext import commands
 from senpo_kaiseki.ocr.senpo_analyzer import SenpoAnalyzer
 import os
@@ -10,7 +9,7 @@ from senpo_kaiseki.db_client import MongoDatabaseClient
 
 
 INITIAL_EXTENSIONS = [
-    'cogs.readcog'
+    'senpo_kaiseki.cogs.readcog'
 ]
 
 
@@ -26,7 +25,7 @@ class discordbot(commands.Bot):
             try:
                 self.load_extension(cog)
             except Exception:
-                traceback.print_exc()
+                print(traceback.format_exc())
 
     # 起動時に動作する処理
     async def on_ready(self):
