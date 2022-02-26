@@ -2,4 +2,4 @@ pyocr
 google-drive-ocr
 discord.py
 numpy
-pymongo
+pymongo[srv]
