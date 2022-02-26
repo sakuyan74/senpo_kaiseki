@@ -75,7 +75,7 @@ class SenpoAnalyzer():
         future_list = []
         with ThreadPoolExecutor(max_workers=4) as executor:
 
-            future_list = [executor.submit(self.check_user, img_org, crop_list[item.value]["data"], item.name) for item in ResultCode]
+            future_list = [executor.submit(self.check_user, img_org, crop_list[item.value]["data"], item.name) for item in ResultCode if item.value < 28]
 
             for future in as_completed(future_list):
                 try:
