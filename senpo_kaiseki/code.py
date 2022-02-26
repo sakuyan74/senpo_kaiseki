@@ -29,3 +29,9 @@ class ResultCode(Enum):
     E_SENPO_1_1 = 25
     E_SENPO_1_2 = 26
     E_SENPO_1_3 = 27
+
+
+class SuccessCode(Enum):
+    INSERT = 0
+    UPDATE = 1
+    FAILED = 2
