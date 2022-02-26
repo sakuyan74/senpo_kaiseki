@@ -9,6 +9,11 @@ from senpo_kaiseki.code import ResultCode, SuccessCode
 from senpo_kaiseki.db_client import MongoDatabaseClient
 
 
+INITIAL_EXTENSIONS = [
+    'cogs.readcog'
+]
+
+
 class discordbot(commands.Bot):
 
     def __init__(self, settings, errorcode, **options):
@@ -17,14 +22,16 @@ class discordbot(commands.Bot):
         self.settings = settings
         self.errorcode = errorcode
 
+        for cog in INITIAL_EXTENSIONS:
+            try:
+                self.load_extension(cog)
+            except Exception:
+                traceback.print_exc()
+
     # 起動時に動作する処理
     async def on_ready(self):
         # 起動したらターミナルにログイン通知が表示される
         print('ログインしました')
-
-    @commands.Bot.command()
-    async def neko(self, ctx):
-        await ctx.send('にゃーん')
 
     # メッセージ受信時に動作する処理
     async def on_message(self, message):
